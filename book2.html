@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全網搜書神器 + AI 深度報告</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 450px;
+            border-top: 5px solid #20b2aa; /* 類似 Perplexity 的藍綠色 */
+        }
+
+        h2 { margin-bottom: 5px; color: #2c3e50; }
+        
+        .sub-title {
+            color: #546e7a;
+            font-size: 0.95em;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 2px solid #cfd8dc;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus { 
+            border-color: #20b2aa; 
+            box-shadow: 0 0 8px rgba(32, 178, 170, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            background-color: #20b2aa; 
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(32, 178, 170, 0.3);
+            transition: transform 0.1s, background 0.3s;
+        }
+        button:hover { background-color: #17968f; }
+        button:active { transform: scale(0.98); }
+
+        .note {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #455a64;
+            background-color: #e0f2f1;
+            border: 1px solid #b2dfdb;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🔎 搜書神器 Pro Max</h2>
+        <p class="sub-title">
+            同步搜尋：高市圖、MOMO、博客來<br>
+            ✨ <strong>Perplexity AI 自動分析報告</strong>
+        </p>
+        
+        <input type="text" id="productInput" placeholder="請輸入書名或商品 (例如: 原子習慣)" autofocus>
+        <button onclick="openCustomSites()">🚀 啟動四開搜尋</button>
+
+        <div class="note">
+            <strong>⚠️ 瀏覽器設定提醒：</strong><br>
+            這會一次開啟 <strong>4 個視窗</strong>。若點擊後只開了一個，請留意網址列是否有「🚫」圖示，點擊並選擇 <strong>「永遠允許」</strong> 即可。
+        </div>
+    </div>
+
+    <script>
+        function openCustomSites() {
+            const keyword = document.getElementById('productInput').value.trim();
+
+            if (!keyword) {
+                alert("請輸入內容才能幫您搜尋喔！");
+                return;
+            }
+
+            const encodedKeyword = encodeURIComponent(keyword);
+
+            // --- 1. 高市圖書館 (使用修正後的參數) ---
+            const urlLibrary = `https://webpacx.ksml.edu.tw/search?searchInput=${encodedKeyword}&searchField=FullText`;
+
+            // --- 2. MOMO 購物 ---
+            const urlMomo = `https://www.momoshop.com.tw/search/searchShop.jsp?keyword=${encodedKeyword}`;
+            
+            // --- 3. 博客來 ---
+            const urlBooks = `https://search.books.com.tw/search/query/key/${encodedKeyword}/cat/all`;
+
+            // --- 4. Perplexity AI (智能分析報告) ---
+            // 我們把搜尋詞組合成一個問句，讓 AI 知道要產生什麼內容
+            const aiQuery = encodeURIComponent(keyword + " 的產品介紹、優缺點分析與網路評價懶人包");
+            const urlPerplexity = `https://www.perplexity.ai/search?q=${aiQuery}`;
+
+            // --- 依序開啟視窗 ---
+            // 設定時間差，避免瀏覽器以為是惡意廣告而攔截
+            window.open(urlLibrary, '_blank');
+            
+            setTimeout(() => { window.open(urlMomo, '_blank'); }, 200);
+            
+            setTimeout(() => { window.open(urlBooks, '_blank'); }, 500);
+            
+            // 給 Perplexity 多一點點緩衝時間，放在最後打開
+            setTimeout(() => { window.open(urlPerplexity, '_blank'); }, 900); 
+        }
+
+        // 綁定 Enter 鍵
+        document.getElementById("productInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                openCustomSites();
+            }
+        });
+    </script>
+
+</body>
+</html>
